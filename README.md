@@ -1,4 +1,4 @@
-# EA Share Count #
+# BE Mega Menu #
 **Contributors:** billerickson  
 **Requires at least:** 4.1  
 **Tested up to:** 4.5.3  
