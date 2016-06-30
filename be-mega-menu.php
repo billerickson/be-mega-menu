@@ -34,18 +34,18 @@
 function be_mega_menu_cpt() {
 
 	$labels = array( 
-		'name'               => 'Sub Menus',
-		'singular_name'      => 'Sub Menu',
+		'name'               => 'Mega Menus',
+		'singular_name'      => 'Mega Menu',
 		'add_new'            => 'Add New',
-		'add_new_item'       => 'Add New Sub Menu',
-		'edit_item'          => 'Edit Sub Menu',
-		'new_item'           => 'New Sub Menu',
-		'view_item'          => 'View Sub Menu',
-		'search_items'       => 'Search Sub Menus',
-		'not_found'          => 'No Sub Menus found',
-		'not_found_in_trash' => 'No Sub Menus found in Trash',
-		'parent_item_colon'  => 'Parent Sub Menu:',
-		'menu_name'          => 'Sub Menus',
+		'add_new_item'       => 'Add New Mega Menu',
+		'edit_item'          => 'Edit Mega Menu',
+		'new_item'           => 'New Mega Menu',
+		'view_item'          => 'View Mega Menu',
+		'search_items'       => 'Search Mega Menus',
+		'not_found'          => 'No Mega Menus found',
+		'not_found_in_trash' => 'No Mega Menus found in Trash',
+		'parent_item_colon'  => 'Parent Mega Menu:',
+		'menu_name'          => 'Mega Menus',
 	);
 
 	$args = array( 
