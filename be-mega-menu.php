@@ -92,3 +92,18 @@ function be_mega_menu_display( $item_output, $item, $depth, $args ) {
 	return $item_output;
 }
 add_filter( 'walker_nav_menu_start_el', 'be_mega_menu_display', 10, 4 );
+
+/**
+ * Limit Menu Depth
+ *
+ */
+function be_mega_menu_limit_depth( $args ) {
+
+	$theme_location = apply_filters( 'be_mega_menu_location', 'header' );
+
+	if( $theme_location == $args['theme_location'] )
+		$args['depth'] = 1;
+		
+	return $args;
+}
+add_filter( 'wp_nav_menu_args', 'be_mega_menu_limit_depth' );
