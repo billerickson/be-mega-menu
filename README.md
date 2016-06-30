@@ -10,6 +10,8 @@ BE Mega Menu lets you use a visual editor for managing mega menu dropdowns.
 
 Go to Appearance > Menus to create your top level menu items. Go to Appearance > Mega Menus to manage the mega menu dropdowns. Create a Mega Menu with the same title as the top level menu item under which it should appear.
 
+This plugin does not add any CSS, so you'll need to customize the styling in your theme. Here is [sample CSS](https://gist.github.com/billerickson/c6c27cd06d9e24305f7d1d2fd8e46425).
+
 ## Customization ##
 
 By default it applies to the 'header' menu theme location. You can change this using the `be_mega_menu_location` filter.
