@@ -83,8 +83,11 @@ function be_mega_menu_display( $item_output, $item, $depth, $args ) {
 		
 	$submenu_object = get_page_by_title( $item->title, false, 'megamenu' );
 	if( !empty( $submenu_object ) && ! is_wp_error( $submenu_object ) ) {
+	
+		$opening_markup = apply_filters( 'be_mega_menu_opening_markup', '<div class="mega-menu"><div class="wrap">' );
+		$closing_markup = apply_filters( 'be_mega_menu_closing_markup', '</div></div>' );
 		
-		$submenu = '<div class="mega-menu"><div class="wrap">' . $submenu_object->post_content . '</div></div>';
+		$submenu = $opening_markup . $submenu_object->post_content . $closing_markup;
 		$item_output = str_replace( '</a>', '</a>' . $submenu, $item_output );
 
 	}
