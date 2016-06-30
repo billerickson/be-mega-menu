@@ -31,7 +31,7 @@
  * Register Mega Menu post type
  *
  */
-function ea_mega_menu_cpt() {
+function be_mega_menu_cpt() {
 
 	$labels = array( 
 		'name'               => 'Sub Menus',
@@ -68,13 +68,13 @@ function ea_mega_menu_cpt() {
 	register_post_type( 'megamenu', apply_filters( 'be_mega_menu_post_type_args', $args ) );
 
 }
-add_action( 'init', 'ea_mega_menu_cpt' );
+add_action( 'init', 'be_mega_menu_cpt' );
 
 /**
  * Display Mega Menus 
  *
  */
-function ea_mega_menu_display( $item_output, $item, $depth, $args ) {
+function be_mega_menu_display( $item_output, $item, $depth, $args ) {
 
 	$theme_location = apply_filters( 'be_mega_menu_location', 'header' );
 	
@@ -91,4 +91,4 @@ function ea_mega_menu_display( $item_output, $item, $depth, $args ) {
 			
 	return $item_output;
 }
-add_filter( 'walker_nav_menu_start_el', 'ea_mega_menu_display', 10, 4 );
+add_filter( 'walker_nav_menu_start_el', 'be_mega_menu_display', 10, 4 );
