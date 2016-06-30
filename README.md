@@ -18,6 +18,8 @@ The mega menu applies to the 'header' menu theme location. You can change this u
 
 The opening markup on mega menus is `<div class="mega-menu"><div class="wrap">`. This can be customized using the `be_mega_menu_opening_markup` filter.
 
+The mega menu content can be customized using the `ea_the_content` filter. [See this example](http://www.billerickson.net/code/duplicate-the_content-filters/) to duplicate the filters on `the_content`
+
 The closing markup on mega menus is `</div></div>`. This can be customized using the `be_mega_menu_closing_markup` filter.
 
 You can customize the post type arguments used to create the Mega Menu post type with the `be_mega_menu_post_type_args` filter.

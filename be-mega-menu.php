@@ -87,7 +87,7 @@ function be_mega_menu_display( $item_output, $item, $depth, $args ) {
 		$opening_markup = apply_filters( 'be_mega_menu_opening_markup', '<div class="mega-menu"><div class="wrap">' );
 		$closing_markup = apply_filters( 'be_mega_menu_closing_markup', '</div></div>' );
 		
-		$submenu = $opening_markup . $submenu_object->post_content . $closing_markup;
+		$submenu = $opening_markup . apply_filters( 'ea_the_content', $submenu_object->post_content ) . $closing_markup;
 		$item_output = str_replace( '</a>', '</a>' . $submenu, $item_output );
 
 	}
