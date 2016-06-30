@@ -76,7 +76,9 @@ add_action( 'init', 'ea_mega_menu_cpt' );
  */
 function ea_mega_menu_display( $item_output, $item, $depth, $args ) {
 
-	if( ! ( 'header' == $args->theme_location && 0 == $depth ) )
+	$theme_location = apply_filters( 'be_mega_menu_location', 'header' );
+	
+	if( ! ( $theme_location == $args->theme_location && 0 == $depth ) )
 		return $item_output;
 		
 	$submenu_object = get_page_by_title( $item->title, false, 'megamenu' );
