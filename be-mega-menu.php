@@ -65,7 +65,7 @@ function ea_mega_menu_cpt() {
 		'menu_icon'           => 'dashicons-editor-table', // https://developer.wordpress.org/resource/dashicons/
 	);
 
-	register_post_type( 'megamenu', $args );
+	register_post_type( 'megamenu', apply_filters( 'be_mega_menu_post_type_args', $args ) );
 
 }
 add_action( 'init', 'ea_mega_menu_cpt' );
