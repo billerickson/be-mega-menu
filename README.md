@@ -14,7 +14,7 @@ This plugin does not add any CSS, so you'll need to customize the styling in you
 
 ## Customization ##
 
-The mega menu applies to the 'header' menu theme location. You can change this using the `be_mega_menu_location` filter.
+The mega menu applies to the 'header' menu theme location. You can change this using the `be_mega_menu_location` filter. [Example](https://gist.github.com/billerickson/7dd447a9ecf00a3b0e0aeda5b56328c3)
 
 The opening markup on mega menus is `<div class="mega-menu"><div class="wrap">`. This can be customized using the `be_mega_menu_opening_markup` filter.
 
