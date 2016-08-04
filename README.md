@@ -12,6 +12,14 @@ Go to Appearance > Menus to create your top level menu items. Go to Appearance >
 
 This plugin does not add any CSS, so you'll need to customize the styling in your theme. Here is [sample CSS](https://gist.github.com/billerickson/c6c27cd06d9e24305f7d1d2fd8e46425).
 
+## Screenshots ##
+
+#### Backend
+![backend screenshot](https://d3vv6lp55qjaqc.cloudfront.net/items/2a2o0R3V3l3y0v1S3U40/Screen%20Shot%202016-08-04%20at%2012.52.55%20PM.png?v=6ba79d66)
+
+#### Frontend
+![frontend screenshot](https://d3vv6lp55qjaqc.cloudfront.net/items/180v3e0A1D0E2D3y3R2d/Screen%20Shot%202016-08-04%20at%2012.53.25%20PM.png?v=e6d40355)
+
 ## Customization ##
 
 The mega menu applies to the 'header' menu theme location. You can change this using the `be_mega_menu_location` filter. Example:
