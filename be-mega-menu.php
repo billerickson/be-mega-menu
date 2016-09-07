@@ -5,7 +5,7 @@
  * Description: Use a visual editor for managing mega menu dropdowns
  * Author:      Bill Erickson
  * Author URI:  http://www.billerickson.net
- * Version:     1.0.0
+ * Version:     1.0.1
  *
  * BE Mega Menu is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -82,6 +82,15 @@ function be_mega_menu_display( $item_output, $item, $depth, $args ) {
 		return $item_output;
 		
 	$submenu_object = get_page_by_title( $item->title, false, 'megamenu' );
+
+	// WPML Support
+	if( function_exists( 'icl_object_id' ) ) {
+		$translation = icl_object_id( $submenu_object->ID, 'megamenu', false );
+		if( $translation ) {
+			$submenu_object = get_post( $translation );
+		}
+	}
+	
 	if( !empty( $submenu_object ) && ! is_wp_error( $submenu_object ) ) {
 	
 		$opening_markup = apply_filters( 'be_mega_menu_opening_markup', '<div class="mega-menu"><div class="wrap">' );
