@@ -33,7 +33,7 @@
  */
 function be_mega_menu_cpt() {
 
-	$labels = array( 
+	$labels = array(
 		'name'               => 'Mega Menus',
 		'singular_name'      => 'Mega Menu',
 		'add_new'            => 'Add New',
@@ -48,10 +48,10 @@ function be_mega_menu_cpt() {
 		'menu_name'          => 'Mega Menus',
 	);
 
-	$args = array( 
+	$args = array(
 		'labels'              => $labels,
 		'hierarchical'        => false,
-		'supports'            => array( 'title', 'editor', 'revisions' ),   
+		'supports'            => array( 'title', 'editor', 'revisions' ),
 		'public'              => false,
 		'show_ui'             => true,
 		'show_in_menu'        => 'themes.php',
@@ -71,16 +71,16 @@ function be_mega_menu_cpt() {
 add_action( 'init', 'be_mega_menu_cpt' );
 
 /**
- * Display Mega Menus 
+ * Display Mega Menus
  *
  */
 function be_mega_menu_display( $item_output, $item, $depth, $args ) {
 
 	$theme_location = apply_filters( 'be_mega_menu_location', 'header' );
-	
+
 	if( ! ( $theme_location == $args->theme_location && 0 == $depth ) )
 		return $item_output;
-	
+
 	$submenu_object = false;
 	foreach( $item->classes as $class ) {
 		if( strpos( $class, 'megamenu-' ) !== false )
@@ -90,23 +90,23 @@ function be_mega_menu_display( $item_output, $item, $depth, $args ) {
 		$submenu_object = get_page_by_title( $item->title, false, 'megamenu' );
 
 	// WPML Support
-	if( function_exists( 'icl_object_id' ) ) {
+	if( function_exists( 'icl_object_id' ) && $submenu_object ) {
 		$translation = icl_object_id( $submenu_object->ID, 'megamenu', false );
 		if( $translation ) {
 			$submenu_object = get_post( $translation );
 		}
 	}
-	
+
 	if( !empty( $submenu_object ) && ! is_wp_error( $submenu_object ) ) {
-	
+
 		$opening_markup = apply_filters( 'be_mega_menu_opening_markup', '<div class="mega-menu"><div class="wrap">' );
 		$closing_markup = apply_filters( 'be_mega_menu_closing_markup', '</div></div>' );
-		
+
 		$submenu = $opening_markup . apply_filters( 'ea_the_content', $submenu_object->post_content ) . $closing_markup;
 		$item_output = str_replace( '</a>', '</a>' . $submenu, $item_output );
 
 	}
-			
+
 	return $item_output;
 }
 add_filter( 'walker_nav_menu_start_el', 'be_mega_menu_display', 10, 4 );
@@ -121,7 +121,7 @@ function be_mega_menu_limit_depth( $args ) {
 
 	if( $theme_location == $args['theme_location'] )
 		$args['depth'] = 1;
-		
+
 	return $args;
 }
 add_filter( 'wp_nav_menu_args', 'be_mega_menu_limit_depth' );
