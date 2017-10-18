@@ -216,17 +216,4 @@ final class BE_Mega_Menu {
 
 	}
 }
-
-/**
- * The function provides access to the internal methods.
- *
- * Use this function like you would a global variable, except without needing
- * to declare the global.
- *
- * @since 1.1.0
- * @return object
- */
-function be_mega_menu() {
-	return BE_Mega_Menu::instance();
-}
-be_mega_menu();
+new BE_Mega_Menu;
