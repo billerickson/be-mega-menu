@@ -198,7 +198,7 @@ final class BE_Mega_Menu {
 		$submenu_object = false;
 		foreach( $item->classes as $class ) {
 			if( strpos( $class, 'megamenu-' ) !== false )
-				$submenu_object = get_post( str_replace( 'megamenu-', '', $class ) );
+				$submenu_object = get_post( intval( str_replace( 'megamenu-', '', $class ) ) );
 		}
 
 		if( ! $submenu_object )
@@ -208,7 +208,7 @@ final class BE_Mega_Menu {
 		if( function_exists( 'icl_object_id' ) && $submenu_object ) {
 			$translation = icl_object_id( $submenu_object->ID, 'megamenu', false );
 			if( $translation ) {
-				$submenu_object = get_post( $translation );
+				$submenu_object = get_post( intval( $translation ) );
 			}
 		}
 
