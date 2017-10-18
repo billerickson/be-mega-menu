@@ -84,9 +84,7 @@ final class BE_Mega_Menu {
 	function init() {
 
 		// Set new location
-		$location = apply_filters( 'be_mega_menu_location', false );
-		if( $location )
-			$this->menu_location = $location;
+		$this->menu_location = apply_filters( 'be_mega_menu_location', $this->menu_location );
 
 		add_action( 'init', array( $this, 'register_cpt' ), 20 );
 		add_filter( 'wp_nav_menu_args', array( $this, 'limit_menu_depth' ) );
