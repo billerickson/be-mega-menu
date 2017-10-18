@@ -90,6 +90,7 @@ final class BE_Mega_Menu {
 
 		add_action( 'init', array( $this, 'register_cpt' ), 20 );
 		add_filter( 'wp_nav_menu_args', array( $this, 'limit_menu_depth' ) );
+		add_filter( 'nav_menu_css_class', array( $this, 'menu_item_classes' ), 10, 4 );
 		add_filter( 'walker_nav_menu_start_el', array( $this, 'display_mega_menus' ), 10, 4 );
 
 	}
@@ -149,6 +150,24 @@ final class BE_Mega_Menu {
 	}
 
 	/**
+	 * Menu Item Classes
+	 *
+	 */
+	function menu_item_classes( $classes, $item, $args, $depth ) {
+
+		if( $this->menu_location != $args->theme_location )
+			return $classes;
+
+		if( in_array( 'menu-item-has-children', $classes ) )
+			$classes = array_diff( $classes, array( 'menu-item-has-children' ) );
+
+		if( $this->mega_menu( $item ) )
+			$classes[] = 'menu-item-has-children';
+
+		return $classes;
+	}
+
+	/**
 	 * Display Mega Menus
 	 *
 	 */
@@ -157,21 +176,7 @@ final class BE_Mega_Menu {
 		if( ! ( $this->menu_location == $args->theme_location && 0 == $depth ) )
 			return $item_output;
 
-		$submenu_object = false;
-		foreach( $item->classes as $class ) {
-			if( strpos( $class, 'megamenu-' ) !== false )
-				$submenu_object = get_post( str_replace( 'megamenu-', '', $class ) );
-		}
-		if( ! $submenu_object )
-			$submenu_object = get_page_by_title( $item->title, false, 'megamenu' );
-
-		// WPML Support
-		if( function_exists( 'icl_object_id' ) && $submenu_object ) {
-			$translation = icl_object_id( $submenu_object->ID, 'megamenu', false );
-			if( $translation ) {
-				$submenu_object = get_post( $translation );
-			}
-		}
+		$submenu_object = $this->mega_menu( $item );
 
 		if( !empty( $submenu_object ) && ! is_wp_error( $submenu_object ) ) {
 
@@ -184,6 +189,33 @@ final class BE_Mega_Menu {
 		}
 
 		return $item_output;
+	}
+
+	/**
+	 * Mega Menu
+	 *
+	 */
+	function mega_menu( $item ) {
+
+		$submenu_object = false;
+		foreach( $item->classes as $class ) {
+			if( strpos( $class, 'megamenu-' ) !== false )
+				$submenu_object = get_post( str_replace( 'megamenu-', '', $class ) );
+		}
+
+		if( ! $submenu_object )
+			$submenu_object = get_page_by_title( $item->title, false, 'megamenu' );
+
+		// WPML Support
+		if( function_exists( 'icl_object_id' ) && $submenu_object ) {
+			$translation = icl_object_id( $submenu_object->ID, 'megamenu', false );
+			if( $translation ) {
+				$submenu_object = get_post( $translation );
+			}
+		}
+
+		return $submenu_object;
+
 	}
 }
 
