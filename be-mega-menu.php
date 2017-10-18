@@ -5,7 +5,7 @@
  * Description: Use a visual editor for managing mega menu dropdowns
  * Author:      Bill Erickson
  * Author URI:  http://www.billerickson.net
- * Version:     1.0.2
+ * Version:     1.1.0
  *
  * BE Mega Menu is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,101 +27,176 @@
  * @copyright  Copyright (c) 2015
  */
 
-/**
- * Register Mega Menu post type
- *
- */
-function be_mega_menu_cpt() {
 
-	$labels = array(
-		'name'               => 'Mega Menus',
-		'singular_name'      => 'Mega Menu',
-		'add_new'            => 'Add New',
-		'add_new_item'       => 'Add New Mega Menu',
-		'edit_item'          => 'Edit Mega Menu',
-		'new_item'           => 'New Mega Menu',
-		'view_item'          => 'View Mega Menu',
-		'search_items'       => 'Search Mega Menus',
-		'not_found'          => 'No Mega Menus found',
-		'not_found_in_trash' => 'No Mega Menus found in Trash',
-		'parent_item_colon'  => 'Parent Mega Menu:',
-		'menu_name'          => 'Mega Menus',
-	);
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-	$args = array(
-		'labels'              => $labels,
-		'hierarchical'        => false,
-		'supports'            => array( 'title', 'editor', 'revisions' ),
-		'public'              => false,
-		'show_ui'             => true,
-		'show_in_menu'        => 'themes.php',
-		'show_in_nav_menus'   => false,
-		'publicly_queryable'  => true,
-		'exclude_from_search' => true,
-		'has_archive'         => false,
-		'query_var'           => true,
-		'can_export'          => true,
-		'rewrite'             => array( 'slug' => 'megamenu', 'with_front' => false ),
-		'menu_icon'           => 'dashicons-editor-table', // https://developer.wordpress.org/resource/dashicons/
-	);
-
-	register_post_type( 'megamenu', apply_filters( 'be_mega_menu_post_type_args', $args ) );
-
-}
-add_action( 'init', 'be_mega_menu_cpt' );
 
 /**
- * Display Mega Menus
+ * Main class
  *
+ * @since 1.1.0
+ * @package BE_Mega_Menu
  */
-function be_mega_menu_display( $item_output, $item, $depth, $args ) {
+final class BE_Mega_Menu {
 
-	$theme_location = apply_filters( 'be_mega_menu_location', 'header' );
+	/**
+	 * Instance of the class.
+	 *
+	 * @since 1.1.0
+	 * @var object
+	 */
+	private static $instance;
 
-	if( ! ( $theme_location == $args->theme_location && 0 == $depth ) )
-		return $item_output;
+	/**
+	 * Plugin version.
+	 *
+	 * @since 1.1.0
+	 * @var string
+	 */
+	private $version = '1.1.0';
 
-	$submenu_object = false;
-	foreach( $item->classes as $class ) {
-		if( strpos( $class, 'megamenu-' ) !== false )
-			$submenu_object = get_post( str_replace( 'megamenu-', '', $class ) );
-	}
-	if( ! $submenu_object )
-		$submenu_object = get_page_by_title( $item->title, false, 'megamenu' );
+	/**
+	 * Menu Location
+	 *
+	 */
+	public $menu_location = 'header';
 
-	// WPML Support
-	if( function_exists( 'icl_object_id' ) && $submenu_object ) {
-		$translation = icl_object_id( $submenu_object->ID, 'megamenu', false );
-		if( $translation ) {
-			$submenu_object = get_post( $translation );
+	/**
+	 * Plugin Instance.
+	 *
+	 * @since 1.1.0
+	 * @return BE_Mega_Menu
+	 */
+	public static function instance() {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof BE_Mega_Menu ) ) {
+			self::$instance = new BE_Mega_Menu;
+			add_action( 'init', array( self::$instance, 'init' ) );
 		}
+		return self::$instance;
 	}
 
-	if( !empty( $submenu_object ) && ! is_wp_error( $submenu_object ) ) {
+	/**
+	 * Initialize
+	 *
+	 * @since 1.1.0
+	 */
+	function init() {
 
-		$opening_markup = apply_filters( 'be_mega_menu_opening_markup', '<div class="mega-menu"><div class="wrap">' );
-		$closing_markup = apply_filters( 'be_mega_menu_closing_markup', '</div></div>' );
+		// Set new location
+		$location = apply_filters( 'be_mega_menu_location', false );
+		if( $location )
+			$this->menu_location = $location;
 
-		$submenu = $opening_markup . apply_filters( 'ea_the_content', $submenu_object->post_content ) . $closing_markup;
-		$item_output = str_replace( '</a>', '</a>' . $submenu, $item_output );
+		add_action( 'init', array( $this, 'register_cpt' ), 20 );
+		add_filter( 'wp_nav_menu_args', array( $this, 'limit_menu_depth' ) );
+		add_filter( 'walker_nav_menu_start_el', array( $this, 'display_mega_menus' ), 10, 4 );
 
 	}
 
-	return $item_output;
+	/**
+	 * Register Mega Menu post type
+	 *
+	 */
+	function register_cpt() {
+
+		$labels = array(
+			'name'               => 'Mega Menus',
+			'singular_name'      => 'Mega Menu',
+			'add_new'            => 'Add New',
+			'add_new_item'       => 'Add New Mega Menu',
+			'edit_item'          => 'Edit Mega Menu',
+			'new_item'           => 'New Mega Menu',
+			'view_item'          => 'View Mega Menu',
+			'search_items'       => 'Search Mega Menus',
+			'not_found'          => 'No Mega Menus found',
+			'not_found_in_trash' => 'No Mega Menus found in Trash',
+			'parent_item_colon'  => 'Parent Mega Menu:',
+			'menu_name'          => 'Mega Menus',
+		);
+
+		$args = array(
+			'labels'              => $labels,
+			'hierarchical'        => false,
+			'supports'            => array( 'title', 'editor', 'revisions' ),
+			'public'              => false,
+			'show_ui'             => true,
+			'show_in_menu'        => 'themes.php',
+			'show_in_nav_menus'   => false,
+			'publicly_queryable'  => true,
+			'exclude_from_search' => true,
+			'has_archive'         => false,
+			'query_var'           => true,
+			'can_export'          => true,
+			'rewrite'             => array( 'slug' => 'megamenu', 'with_front' => false ),
+			'menu_icon'           => 'dashicons-editor-table', // https://developer.wordpress.org/resource/dashicons/
+		);
+
+		register_post_type( 'megamenu', apply_filters( 'be_mega_menu_post_type_args', $args ) );
+
+	}
+
+	/**
+	 * Limit Menu Depth
+	 *
+	 */
+	function limit_menu_depth( $args ) {
+
+		if( $this->menu_location == $args['theme_location'] )
+			$args['depth'] = 1;
+
+		return $args;
+	}
+
+	/**
+	 * Display Mega Menus
+	 *
+	 */
+	function display_mega_menus( $item_output, $item, $depth, $args ) {
+
+		if( ! ( $this->menu_location == $args->theme_location && 0 == $depth ) )
+			return $item_output;
+
+		$submenu_object = false;
+		foreach( $item->classes as $class ) {
+			if( strpos( $class, 'megamenu-' ) !== false )
+				$submenu_object = get_post( str_replace( 'megamenu-', '', $class ) );
+		}
+		if( ! $submenu_object )
+			$submenu_object = get_page_by_title( $item->title, false, 'megamenu' );
+
+		// WPML Support
+		if( function_exists( 'icl_object_id' ) && $submenu_object ) {
+			$translation = icl_object_id( $submenu_object->ID, 'megamenu', false );
+			if( $translation ) {
+				$submenu_object = get_post( $translation );
+			}
+		}
+
+		if( !empty( $submenu_object ) && ! is_wp_error( $submenu_object ) ) {
+
+			$opening_markup = apply_filters( 'be_mega_menu_opening_markup', '<div class="mega-menu"><div class="wrap">' );
+			$closing_markup = apply_filters( 'be_mega_menu_closing_markup', '</div></div>' );
+
+			$submenu = $opening_markup . apply_filters( 'ea_the_content', $submenu_object->post_content ) . $closing_markup;
+			$item_output = str_replace( '</a>', '</a>' . $submenu, $item_output );
+
+		}
+
+		return $item_output;
+	}
 }
-add_filter( 'walker_nav_menu_start_el', 'be_mega_menu_display', 10, 4 );
 
 /**
- * Limit Menu Depth
+ * The function provides access to the internal methods.
  *
+ * Use this function like you would a global variable, except without needing
+ * to declare the global.
+ *
+ * @since 1.1.0
+ * @return object
  */
-function be_mega_menu_limit_depth( $args ) {
-
-	$theme_location = apply_filters( 'be_mega_menu_location', 'header' );
-
-	if( $theme_location == $args['theme_location'] )
-		$args['depth'] = 1;
-
-	return $args;
+function be_mega_menu() {
+	return BE_Mega_Menu::instance();
 }
-add_filter( 'wp_nav_menu_args', 'be_mega_menu_limit_depth' );
+be_mega_menu();
