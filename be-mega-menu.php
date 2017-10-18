@@ -41,39 +41,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 final class BE_Mega_Menu {
 
 	/**
-	 * Instance of the class.
-	 *
-	 * @since 1.1.0
-	 * @var object
-	 */
-	private static $instance;
-
-	/**
-	 * Plugin version.
-	 *
-	 * @since 1.1.0
-	 * @var string
-	 */
-	private $version = '1.1.0';
-
-	/**
 	 * Menu Location
 	 *
+	 * @since 1.1.0
 	 */
 	public $menu_location = 'header';
 
 	/**
-	 * Plugin Instance.
+	 * Plugin Constructor.
 	 *
 	 * @since 1.1.0
 	 * @return BE_Mega_Menu
 	 */
-	public static function instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof BE_Mega_Menu ) ) {
-			self::$instance = new BE_Mega_Menu;
-			add_action( 'init', array( self::$instance, 'init' ) );
-		}
-		return self::$instance;
+	function __construct() {
+		add_action( 'init', array( $this, 'init' ) );
 	}
 
 	/**
@@ -96,6 +77,7 @@ final class BE_Mega_Menu {
 	/**
 	 * Register Mega Menu post type
 	 *
+	 * @since 1.0.0
 	 */
 	function register_cpt() {
 
@@ -138,6 +120,9 @@ final class BE_Mega_Menu {
 	/**
 	 * Limit Menu Depth
 	 *
+	 * @since 1.0.0
+	 * @param array $args
+	 * @return array
 	 */
 	function limit_menu_depth( $args ) {
 
@@ -150,6 +135,12 @@ final class BE_Mega_Menu {
 	/**
 	 * Menu Item Classes
 	 *
+	 * @since 1.1.0
+	 * @param array $classes
+	 * @param object $item
+	 * @param object $args
+	 * @param int $depth
+	 * @return array
 	 */
 	function menu_item_classes( $classes, $item, $args, $depth ) {
 
@@ -168,6 +159,12 @@ final class BE_Mega_Menu {
 	/**
 	 * Display Mega Menus
 	 *
+	 * @since 1.0.0
+	 * @param string $item_output
+	 * @param object $item
+	 * @param int $depth
+	 * @param object $args
+	 * @return string
 	 */
 	function display_mega_menus( $item_output, $item, $depth, $args ) {
 
@@ -192,6 +189,9 @@ final class BE_Mega_Menu {
 	/**
 	 * Mega Menu
 	 *
+	 * @since 1.1.0
+	 * @param object $item
+	 * @return object $submenu_object
 	 */
 	function mega_menu( $item ) {
 
